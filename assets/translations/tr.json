@@ -1,0 +1,18 @@
+{
+  "home": {
+    "title": "Ana Sayfa",
+    "go_to_detail": "Film Detayına Git",
+    "go_to_favorites": "Favorilere Git"
+    },
+
+    "general": {
+        "button": {
+            "submit": "Gönder",
+            "cancel": "İptal"
+        },
+        "dialog": {
+            "confirm": "Onayla",
+            "decline": "Reddet"
+        }
+    }
+}

@@ -1,0 +1,18 @@
+{
+    "home": {
+    "title": "Home",
+    "go_to_detail": "Go to Movie Detail",
+    "go_to_favorites": "Go to Favorites"
+    },
+
+    "general": {
+        "button": {
+            "submit": "Submit",
+            "cancel": "Cancel"
+        },
+        "dialog": {
+            "confirm": "Confirm",
+            "decline": "Decline"
+        }
+    }
+}

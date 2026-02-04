@@ -1,18 +1,23 @@
+import 'package:easy_localization/easy_localization.dart';
+import 'package:fenix/fenix_app.dart';
 import 'package:flutter/material.dart';
 
-void main() => runApp(const MyApp());
+Future<void> main() async {
+  WidgetsFlutterBinding.ensureInitialized();
 
-class MyApp extends StatelessWidget {
-  const MyApp({super.key});
+  /// Localization initialization
+  await EasyLocalization.ensureInitialized();
+  EasyLocalization.logger.enableLevels = [];
 
-  @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Material App',
-      home: Scaffold(
-        appBar: AppBar(title: const Text('Material App Bar')),
-        body: const Center(child: Text('Hello World')),
-      ),
-    );
-  }
+  runApp(
+    EasyLocalization(
+      supportedLocales: const [
+        Locale('en'),
+        Locale('tr'),
+      ],
+      path: 'assets/translations',
+      fallbackLocale: const Locale('en'),
+      child: const FenixApp(),
+    ),
+  );
 }
