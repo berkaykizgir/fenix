@@ -1,6 +1,8 @@
 import 'package:fenix/config/localization/language_storage.dart';
 import 'package:flutter/material.dart';
+import 'package:injectable/injectable.dart';
 
+@lazySingleton
 class LanguageManager {
   LanguageManager(this._storage);
 
@@ -18,6 +20,7 @@ class LanguageManager {
       return const Locale('en');
     }
 
+    debugPrint('📖 Language loaded: $savedLanguageCode');
     return Locale(savedLanguageCode);
   }
 
@@ -25,6 +28,7 @@ class LanguageManager {
   ///
   /// UI layer is responsible for calling `context.setLocale`.
   Future<void> saveSelectedLocale(Locale locale) async {
+    debugPrint('✅ Language saved: ${locale.languageCode}');
     await _storage.saveLanguageCode(locale.languageCode);
   }
 }

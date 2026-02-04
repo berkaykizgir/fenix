@@ -1,23 +1,33 @@
 import 'package:fenix/config/localization/language_storage.dart';
-import 'package:hive/hive.dart';
+import 'package:fenix/core/util/constants/hive_constants.dart';
+import 'package:hive_flutter/hive_flutter.dart';
+import 'package:injectable/injectable.dart';
 
+/// Hive implementation of LanguageStorage.
+///
+/// Persists language preference in local storage using Hive.
+@LazySingleton(as: LanguageStorage)
 class LanguageStorageImpl implements LanguageStorage {
-  static const _boxName = 'settings';
-  static const _languageKey = 'language_code';
+  Box<String>? _box;
+
+  /// Ensures Hive box is open before operations.
+  Future<void> _ensureBoxOpen() async {
+    if (_box == null || !_box!.isOpen) {
+      _box = await Hive.openBox<String>(HiveConstants.settingsBox);
+    }
+  }
 
   @override
   Future<void> saveLanguageCode(String languageCode) async {
-    final box = Hive.box<String>(_boxName);
-    await box.put(_languageKey, languageCode);
+    await _ensureBoxOpen();
+    await _box!.put(HiveConstants.languageKey, languageCode);
   }
 
   @override
   String? getSavedLanguageCode() {
-    if (!Hive.isBoxOpen(_boxName)) {
+    if (_box == null || !_box!.isOpen) {
       return null;
     }
-
-    final box = Hive.box<String>(_boxName);
-    return box.get(_languageKey);
+    return _box!.get(HiveConstants.languageKey);
   }
 }
