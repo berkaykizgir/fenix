@@ -1,6 +1,6 @@
 import 'package:fenix/config/localization/language_storage.dart';
 import 'package:fenix/core/util/constants/hive_constants.dart';
-import 'package:hive_flutter/hive_flutter.dart';
+import 'package:hive_ce/hive.dart';
 import 'package:injectable/injectable.dart';
 
 /// Hive implementation of LanguageStorage.

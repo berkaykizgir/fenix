@@ -1,18 +1,22 @@
 {
   "home": {
-    "title": "Ana Sayfa",
-    "go_to_detail": "Film Detayına Git",
-    "go_to_favorites": "Favorilere Git"
-    },
-
-    "general": {
-        "button": {
-            "submit": "Gönder",
-            "cancel": "İptal"
-        },
-        "dialog": {
-            "confirm": "Onayla",
-            "decline": "Reddet"
-        }
-    }
+    "title": "Filmler",
+    "search_hint": "Film ara...",
+    "search_prompt": "Film aramak için yazın",
+    "no_movies": "Film bulunamadı",
+    "retry": "Tekrar Dene",
+    "loading_more": "Daha fazla film yükleniyor...",
+    "offline_mode": "📴 Çevrimdışı Mod: Önbelleğe alınmış filmler gösteriliyor (20)",
+    "offline_search": "🔍 Önbellekteki filmlerde aranıyor..."
+  },
+  "premium": {
+    "title": "Sınırsız Film İzle",
+    "description": "Premium'a geçerek sınırsız film keşfet ve özel özelliklerin keyfini çıkar!",
+    "feature_unlimited": "Sınırsız film gezintisi",
+    "feature_offline": "İndir ve çevrimdışı izle",
+    "feature_quality": "HD & 4K kalite",
+    "upgrade_now": "Premium'a Geç",
+    "maybe_later": "Belki Sonra",
+    "coming_soon": "Premium özellikler yakında!"
+  }
 }

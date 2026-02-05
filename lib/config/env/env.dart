@@ -4,7 +4,7 @@ part 'env.g.dart';
 
 /// Environment configuration using Envied.
 ///
-/// Add your API keys to `.env` file in project root.
+/// Add your Variables to `.env` file in project root.
 @Envied(path: '.env')
 abstract class Env {
   @EnviedField(varName: 'API_BASE_URL')

@@ -6,5 +6,5 @@ abstract class ThemeStorage {
   Future<void> saveThemeMode(ThemeMode themeMode);
 
   /// Returns saved theme mode if exists
-  Future<ThemeMode?> getSavedThemeMode(); // ⬅️ Async yaptık
+  Future<ThemeMode?> getSavedThemeMode();
 }

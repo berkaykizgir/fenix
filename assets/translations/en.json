@@ -1,18 +1,22 @@
 {
-    "home": {
-    "title": "Home",
-    "go_to_detail": "Go to Movie Detail",
-    "go_to_favorites": "Go to Favorites"
-    },
-
-    "general": {
-        "button": {
-            "submit": "Submit",
-            "cancel": "Cancel"
-        },
-        "dialog": {
-            "confirm": "Confirm",
-            "decline": "Decline"
-        }
-    }
+  "home": {
+    "title": "Movies",
+    "search_hint": "Search movies...",
+    "search_prompt": "Search for movies",
+    "no_movies": "No movies found",
+    "retry": "Retry",
+    "loading_more": "Loading more movies...",
+    "offline_mode": "📴 Offline Mode: Showing cached movies (20)",
+    "offline_search": "🔍 Searching in cached movies..."
+  },
+  "premium": {
+    "title": "Unlock Unlimited Movies",
+    "description": "Upgrade to Premium to browse unlimited movies and enjoy exclusive features!",
+    "feature_unlimited": "Unlimited movie browsing",
+    "feature_offline": "Download & watch offline",
+    "feature_quality": "HD & 4K quality",
+    "upgrade_now": "Upgrade to Premium",
+    "maybe_later": "Maybe Later",
+    "coming_soon": "Premium features coming soon!"
+  }
 }

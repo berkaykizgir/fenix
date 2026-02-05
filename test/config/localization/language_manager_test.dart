@@ -22,7 +22,7 @@ void main() {
         when(() => mockStorage.getSavedLanguageCode()).thenReturn('tr');
 
         // Act
-        final result = languageManager.getInitialLocale();
+        final result = languageManager.getInitialLocale([const Locale('en'), const Locale('tr')]);
 
         // Assert
         expect(result, const Locale('tr'));
@@ -34,7 +34,7 @@ void main() {
         when(() => mockStorage.getSavedLanguageCode()).thenReturn(null);
 
         // Act
-        final result = languageManager.getInitialLocale();
+        final result = languageManager.getInitialLocale([const Locale('en'), const Locale('tr')]);
 
         // Assert
         expect(result, const Locale('en'));
@@ -46,7 +46,7 @@ void main() {
         when(() => mockStorage.getSavedLanguageCode()).thenReturn('');
 
         // Act
-        final result = languageManager.getInitialLocale();
+        final result = languageManager.getInitialLocale([const Locale('en'), const Locale('tr')]);
 
         // Assert
         expect(result, const Locale('en'));

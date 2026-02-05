@@ -6,7 +6,7 @@ publish_to: 'none'
 version: 1.0.0+1
 
 environment:
-  sdk: ">=3.1.3 <4.0.0"
+  sdk: ">=3.8.0 <4.0.0"
 
 dependencies:
   flutter:
@@ -30,8 +30,8 @@ dependencies:
   flutter_bloc: ^9.1.1
 
   #Local Storage
-  hive: ^2.2.3
-  hive_flutter: ^1.1.0
+  hive_ce: ^2.19.3
+  hive_ce_flutter: ^2.3.4
 
   #Config
   envied: ^1.3.2
@@ -39,7 +39,6 @@ dependencies:
 
   #Routing
   auto_route: ^11.1.0
-
 
 
 dev_dependencies:
@@ -56,6 +55,7 @@ dev_dependencies:
   very_good_analysis: ^10.1.0
   flutter_launcher_icons: ^0.14.4
   auto_route_generator: ^10.4.0
+  hive_ce_generator: ^1.11.0
 
 
 flutter_launcher_icons:
