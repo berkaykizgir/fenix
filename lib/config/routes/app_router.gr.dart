@@ -44,16 +44,47 @@ class HomeRoute extends PageRouteInfo<void> {
 
 /// generated route for
 /// [MovieDetailPage]
-class MovieDetailRoute extends PageRouteInfo<void> {
-  const MovieDetailRoute({List<PageRouteInfo>? children})
-    : super(MovieDetailRoute.name, initialChildren: children);
+class MovieDetailRoute extends PageRouteInfo<MovieDetailRouteArgs> {
+  MovieDetailRoute({
+    Key? key,
+    required Movie movie,
+    List<PageRouteInfo>? children,
+  }) : super(
+         MovieDetailRoute.name,
+         args: MovieDetailRouteArgs(key: key, movie: movie),
+         initialChildren: children,
+       );
 
   static const String name = 'MovieDetailRoute';
 
   static PageInfo page = PageInfo(
     name,
     builder: (data) {
-      return const MovieDetailPage();
+      final args = data.argsAs<MovieDetailRouteArgs>();
+      return MovieDetailPage(key: args.key, movie: args.movie);
     },
   );
+}
+
+class MovieDetailRouteArgs {
+  const MovieDetailRouteArgs({this.key, required this.movie});
+
+  final Key? key;
+
+  final Movie movie;
+
+  @override
+  String toString() {
+    return 'MovieDetailRouteArgs{key: $key, movie: $movie}';
+  }
+
+  @override
+  bool operator ==(Object other) {
+    if (identical(this, other)) return true;
+    if (other is! MovieDetailRouteArgs) return false;
+    return key == other.key && movie == other.movie;
+  }
+
+  @override
+  int get hashCode => key.hashCode ^ movie.hashCode;
 }

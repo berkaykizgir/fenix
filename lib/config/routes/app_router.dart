@@ -1,8 +1,10 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:fenix/config/routes/app_routes.dart';
+import 'package:fenix/features/movies/domain/entities/movie.dart';
 import 'package:fenix/features/movies/presentation/pages/home_page.dart';
 import 'package:fenix/features/movies/presentation/pages/movie_detail_page.dart';
 import 'package:fenix/features/favorites/presentation/pages/favorites_page.dart';
+import 'package:flutter/material.dart';
 
 part 'app_router.gr.dart';
 
