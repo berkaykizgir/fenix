@@ -2,8 +2,6 @@ import 'package:fenix/core/di/injection.dart';
 import 'package:fenix/features/favorites/presentation/bloc/favorites_bloc.dart';
 import 'package:fenix/features/favorites/presentation/bloc/favorites_event.dart';
 import 'package:fenix/features/movies/domain/entities/movie.dart';
-import 'package:fenix/features/movies/presentation/bloc/movie_bloc.dart';
-import 'package:fenix/features/movies/presentation/bloc/movie_event.dart';
 import 'package:flutter/material.dart';
 
 class MovieCard extends StatefulWidget {
@@ -27,6 +25,15 @@ class _MovieCardState extends State<MovieCard> {
     _isFavorite = widget.movie.isFavorite;
   }
 
+  @override
+  void didUpdateWidget(covariant MovieCard oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    // Keep local state in sync when parent provides an updated movie instance.
+    if (oldWidget.movie.id != widget.movie.id || oldWidget.movie.isFavorite != widget.movie.isFavorite) {
+      _isFavorite = widget.movie.isFavorite;
+    }
+  }
+
   void _toggleFavorite() {
     setState(() {
       _isFavorite = !_isFavorite;
@@ -34,12 +41,6 @@ class _MovieCardState extends State<MovieCard> {
 
     getIt<FavoritesBloc>().add(
       FavoritesEvent.toggleFavorite(widget.movie),
-    );
-    getIt<MovieBloc>().add(
-      MovieEvent.updateMovieFavoriteStatus(
-        movieId: widget.movie.id,
-        isFavorite: _isFavorite,
-      ),
     );
   }
 

@@ -86,7 +86,11 @@ class _FavoritesPageContent extends StatelessWidget {
                   ),
                   itemCount: favorites.length,
                   itemBuilder: (context, index) {
-                    return MovieCard(movie: favorites[index]);
+                    final movie = favorites[index];
+                    return MovieCard(
+                      key: ValueKey('favorite_${movie.id}_${movie.isFavorite}'),
+                      movie: movie,
+                    );
                   },
                 ),
               );
