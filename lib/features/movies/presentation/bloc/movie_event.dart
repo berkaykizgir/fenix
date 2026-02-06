@@ -13,4 +13,7 @@ sealed class MovieEvent with _$MovieEvent {
     required int movieId,
     required bool isFavorite,
   }) = UpdateMovieFavoriteStatusEvent;
+  const factory MovieEvent.favoritesChanged({
+    required Set<int> favoriteIds,
+  }) = FavoritesChangedEvent;
 }

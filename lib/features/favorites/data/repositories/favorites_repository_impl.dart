@@ -104,7 +104,7 @@ class FavoritesRepositoryImpl implements FavoritesRepository {
     }
   }
 
-  // Helper to convert Movie entity to MovieModel
+// Converts Movie entity to MovieModel.
   MovieModel _movieToModel(Movie movie) {
     return MovieModel(
       id: movie.id,

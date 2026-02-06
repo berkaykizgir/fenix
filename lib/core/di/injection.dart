@@ -9,7 +9,7 @@ final GetIt getIt = GetIt.instance;
 @InjectableInit()
 Future<void> configureDependencies() async => getIt.init();
 
-/// Core module for manual registrations.
+/// Provides manual DI registrations.
 @module
 abstract class CoreModule {
   @lazySingleton

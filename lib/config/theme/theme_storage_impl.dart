@@ -4,9 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:hive_ce/hive.dart';
 import 'package:injectable/injectable.dart';
 
-/// Hive implementation of ThemeStorage.
-///
-/// Persists theme preference in local storage using Hive.
+/// Hive-backed implementation of [ThemeStorage].
 @LazySingleton(as: ThemeStorage)
 class ThemeStorageImpl implements ThemeStorage {
   Box<String>? _box;

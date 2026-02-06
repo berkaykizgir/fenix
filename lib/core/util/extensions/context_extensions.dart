@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 
-/// Extension methods for BuildContext.
-///
-/// Provides shortcuts for theme, locale, and navigation.
+/// Convenience getters on BuildContext.
 extension ContextExtensions on BuildContext {
   // Theme shortcuts
   ThemeData get theme => Theme.of(this);

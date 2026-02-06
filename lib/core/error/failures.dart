@@ -1,10 +1,7 @@
 import 'package:equatable/equatable.dart';
 import 'package:flutter/foundation.dart';
 
-/// Base failure class for domain layer.
-///
-/// All failures must extend this class.
-/// Failures represent business logic errors, not technical exceptions.
+/// Failures used in the domain layer (mapped from data exceptions).
 @immutable
 abstract class Failure extends Equatable {
   const Failure(this.message);

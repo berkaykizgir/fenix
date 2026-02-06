@@ -109,14 +109,12 @@ class _HomePageContentState extends State<_HomePageContent> {
       appBar: AppBar(
         title: Text('home.title'.tr()),
         actions: [
-          // Favorites button
           IconButton(
             icon: const Icon(Icons.favorite),
             onPressed: () async {
               await context.router.push(const FavoritesRoute());
             },
           ),
-          // Language selector
           PopupMenuButton<Locale>(
             icon: const Icon(Icons.language),
             onSelected: (locale) => _changeLanguage(context, locale),
@@ -125,7 +123,6 @@ class _HomePageContentState extends State<_HomePageContent> {
               PopupMenuItem(value: Locale('tr'), child: Text('Türkçe')),
             ],
           ),
-          // Theme selector
           PopupMenuButton<ThemeMode>(
             icon: const Icon(Icons.brightness_6),
             onSelected: _changeTheme,

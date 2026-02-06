@@ -2,6 +2,7 @@ import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:easy_localization/easy_localization.dart';
 
+/// Presents the premium upsell sheet.
 Future<void> showPremiumPrompt(BuildContext context) {
   return showModalBottomSheet<void>(
     context: context,

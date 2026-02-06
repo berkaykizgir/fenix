@@ -1,6 +1,4 @@
-/// Hive box names and keys.
-///
-/// Centralized constants for all local storage operations.
+/// Hive box names and keys for local storage.
 abstract class HiveConstants {
   // Box names
   static const String settingsBox = 'settings';

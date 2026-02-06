@@ -4,7 +4,6 @@ import 'package:fenix/core/di/injection.dart';
 import 'package:fenix/features/favorites/presentation/bloc/favorites_bloc.dart';
 import 'package:fenix/features/favorites/presentation/bloc/favorites_event.dart';
 import 'package:fenix/features/favorites/presentation/bloc/favorites_state.dart';
-import 'package:fenix/features/movies/presentation/bloc/movie_bloc.dart';
 import 'package:fenix/features/movies/presentation/widgets/movie_card.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -15,7 +14,6 @@ class FavoritesPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    debugPrint(getIt<MovieBloc>().hashCode.toString());
     return BlocProvider(
       create: (_) => getIt<FavoritesBloc>()..add(const FavoritesEvent.getFavorites()),
       child: const _FavoritesPageContent(),
@@ -35,9 +33,7 @@ class _FavoritesPageContent extends StatelessWidget {
       body: BlocBuilder<FavoritesBloc, FavoritesState>(
         builder: (context, state) {
           return state.when(
-            initial: () => Center(
-              child: Text('favorites.empty'.tr()),
-            ),
+            initial: () => Center(child: Text('favorites.empty'.tr())),
             loading: () => const Center(
               child: CircularProgressIndicator(),
             ),

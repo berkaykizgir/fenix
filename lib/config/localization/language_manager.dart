@@ -10,11 +10,12 @@ class LanguageManager {
 
   final LanguageStorage _storage;
 
-  /// Returns initial locale for the application.
+  /// Returns initial locale for the app.
   ///
   /// Priority:
-  /// 1. Saved language in local storage
-  /// 2. Fallback locale (English)
+  /// 1) Saved language
+  /// 2) System language if supported
+  /// 3) First supported locale (fallback)
   Locale getInitialLocale(List<Locale> supportedLocales) {
     final savedLanguageCode = _storage.getSavedLanguageCode();
 
@@ -40,7 +41,7 @@ class LanguageManager {
 
   /// Persists selected language.
   ///
-  /// UI layer is responsible for calling `context.setLocale`.
+  /// UI layer should call `context.setLocale`.
   Future<void> saveSelectedLocale(Locale locale) async {
     debugPrint('✅ Language saved: ${locale.languageCode}');
     await _storage.saveLanguageCode(locale.languageCode);

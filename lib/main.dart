@@ -9,15 +9,15 @@ import 'package:hive_ce_flutter/hive_flutter.dart';
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
-  /// Hive initialization
+  // Hive initialization
   await Hive.initFlutter();
   Hive.registerAdapter(MovieModelAdapter());
 
-  /// Dependency Injection setup
+  // Dependency injection setup
   await configureDependencies();
   await getIt<ThemeManager>().initialize();
 
-  /// Localization initialization
+  // Localization initialization
   await EasyLocalization.ensureInitialized();
   EasyLocalization.logger.enableLevels = [];
 

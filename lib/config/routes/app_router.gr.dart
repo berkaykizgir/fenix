@@ -46,12 +46,12 @@ class HomeRoute extends PageRouteInfo<void> {
 /// [MovieDetailPage]
 class MovieDetailRoute extends PageRouteInfo<MovieDetailRouteArgs> {
   MovieDetailRoute({
-    Key? key,
     required Movie movie,
+    Key? key,
     List<PageRouteInfo>? children,
   }) : super(
          MovieDetailRoute.name,
-         args: MovieDetailRouteArgs(key: key, movie: movie),
+         args: MovieDetailRouteArgs(movie: movie, key: key),
          initialChildren: children,
        );
 
@@ -61,30 +61,30 @@ class MovieDetailRoute extends PageRouteInfo<MovieDetailRouteArgs> {
     name,
     builder: (data) {
       final args = data.argsAs<MovieDetailRouteArgs>();
-      return MovieDetailPage(key: args.key, movie: args.movie);
+      return MovieDetailPage(movie: args.movie, key: args.key);
     },
   );
 }
 
 class MovieDetailRouteArgs {
-  const MovieDetailRouteArgs({this.key, required this.movie});
-
-  final Key? key;
+  const MovieDetailRouteArgs({required this.movie, this.key});
 
   final Movie movie;
 
+  final Key? key;
+
   @override
   String toString() {
-    return 'MovieDetailRouteArgs{key: $key, movie: $movie}';
+    return 'MovieDetailRouteArgs{movie: $movie, key: $key}';
   }
 
   @override
   bool operator ==(Object other) {
     if (identical(this, other)) return true;
     if (other is! MovieDetailRouteArgs) return false;
-    return key == other.key && movie == other.movie;
+    return movie == other.movie && key == other.key;
   }
 
   @override
-  int get hashCode => key.hashCode ^ movie.hashCode;
+  int get hashCode => movie.hashCode ^ key.hashCode;
 }

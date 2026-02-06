@@ -20,7 +20,7 @@ sealed class MovieModel with _$MovieModel {
   factory MovieModel.fromJson(Map<String, dynamic> json) => _$MovieModelFromJson(json);
 }
 
-/// Extension to convert MovieModel to Movie entity.
+/// Converts MovieModel to Movie entity.
 extension MovieModelX on MovieModel {
   Movie toEntity() {
     return Movie(

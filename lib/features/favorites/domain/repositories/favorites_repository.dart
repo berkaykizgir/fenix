@@ -2,7 +2,7 @@ import 'package:dartz/dartz.dart';
 import 'package:fenix/core/error/failures.dart';
 import 'package:fenix/features/movies/domain/entities/movie.dart';
 
-/// Repository interface for favorites operations.
+/// Favorites repository contract.
 abstract class FavoritesRepository {
   /// Get all favorite movies.
   Future<Either<Failure, List<Movie>>> getFavorites();

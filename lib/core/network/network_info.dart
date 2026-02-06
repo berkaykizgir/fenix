@@ -3,6 +3,7 @@ import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/foundation.dart';
 import 'package:injectable/injectable.dart';
 
+/// Provides network connectivity status.
 abstract class NetworkInfo {
   Future<bool> get isConnected;
   Stream<bool> get connectionStream;

@@ -28,10 +28,16 @@ class MovieBloc extends Bloc<MovieEvent, MovieState> {
     on<LoadMoreSearchResultsEvent>(_onLoadMoreSearchResults);
     on<NetworkStatusChangedEvent>(_onConnectionChanged);
     on<UpdateMovieFavoriteStatusEvent>(_onUpdateMovieFavoriteStatus);
+    on<FavoritesChangedEvent>(_onFavoritesChanged);
 
     _networkSubscription = _networkInfo.connectionStream.listen(
       (isConnected) => add(MovieEvent.networkStatusChanged(isOnline: isConnected)),
     );
+
+    _favoritesSubscription = _favoritesDataSource.watchFavorites().listen((favorites) {
+      final ids = favorites.map((m) => m.id).toSet();
+      add(MovieEvent.favoritesChanged(favoriteIds: ids));
+    });
   }
 
   final GetTopRatedMovies _getTopRatedMovies;
@@ -40,10 +46,11 @@ class MovieBloc extends Bloc<MovieEvent, MovieState> {
   final MovieLocalDataSource _localDataSource;
   final FavoritesLocalDataSource _favoritesDataSource;
 
-  /// Stores the latest search query to restore state after connectivity changes.
+  /// Latest search query to restore state after connectivity changes.
   String? _currentSearchQuery;
 
   late final StreamSubscription<bool> _networkSubscription;
+  late final StreamSubscription<List<MovieModel>> _favoritesSubscription;
   bool _isFirstConnectionEvent = true;
 
   Future<void> _onConnectionChanged(
@@ -302,6 +309,7 @@ class MovieBloc extends Bloc<MovieEvent, MovieState> {
   @override
   Future<void> close() async {
     await _networkSubscription.cancel();
+    await _favoritesSubscription.cancel();
     return super.close();
   }
 
@@ -325,5 +333,26 @@ class MovieBloc extends Bloc<MovieEvent, MovieState> {
     debugPrint('🔄 Updated movie ${event.movieId} favorite status: ${event.isFavorite}');
 
     emit(MovieState.loaded(movies: updatedMovies, hasMore: currentState.hasMore, currentPage: currentState.currentPage, isOffline: currentState.isOffline));
+  }
+
+  void _onFavoritesChanged(
+    FavoritesChangedEvent event,
+    Emitter<MovieState> emit,
+  ) {
+    final currentState = state;
+    if (currentState is! MovieLoaded) return;
+
+    final updatedMovies = currentState.movies.map((movie) {
+      return movie.copyWith(isFavorite: event.favoriteIds.contains(movie.id));
+    }).toList();
+
+    emit(
+      MovieState.loaded(
+        movies: updatedMovies,
+        currentPage: currentState.currentPage,
+        hasMore: currentState.hasMore,
+        isOffline: currentState.isOffline,
+      ),
+    );
   }
 }

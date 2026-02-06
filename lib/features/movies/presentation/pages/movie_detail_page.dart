@@ -7,8 +7,6 @@ import 'package:flutter/material.dart';
 
 @RoutePage()
 class MovieDetailPage extends StatefulWidget {
-  // 1. Değişkeni public ve final yapın.
-  // AutoRoute bunu görüp 'MovieDetailRoute' içine argüman olarak ekleyecek.
   final Movie movie;
 
   const MovieDetailPage({
@@ -23,25 +21,18 @@ class MovieDetailPage extends StatefulWidget {
 class _MovieDetailPageState extends State<MovieDetailPage> {
   late bool _isFavorite;
 
-  // Widget.movie zaten var olduğu için local bir _movie değişkenine
-  // genellikle ihtiyaç duyulmaz ama favori durumunu değiştireceğiniz
-  // için yerel bir kopyasını tutabilir veya sadece ID üzerinden gidebilirsiniz.
-  // Basitlik adına widget.movie kullanacağız, sadece isFavorite'ı state'te tutacağız.
-
   @override
   void initState() {
     super.initState();
-    // Başlangıç değerini gelen objeden alıyoruz
     _isFavorite = widget.movie.isFavorite;
   }
 
   void _toggleFavorite() {
     setState(() => _isFavorite = !_isFavorite);
 
-    // Bloc'a event gönderiyoruz
     getIt<FavoritesBloc>().add(
       FavoritesEvent.toggleFavorite(
-        widget.movie.copyWith(isFavorite: _isFavorite),
+        widget.movie,
       ),
     );
   }

@@ -1,8 +1,6 @@
 import 'package:flutter/foundation.dart';
 
-/// Base exception class for data layer.
-///
-/// Data sources throw exceptions, repositories convert them to Failures.
+/// Exceptions thrown in data layer; repositories map them to failures.
 @immutable
 abstract class AppException implements Exception {
   const AppException(this.message);

@@ -8,7 +8,7 @@ import 'package:fenix/core/network/network_info.dart';
 import 'package:fenix/core/util/constants/app_constants.dart';
 import 'package:injectable/injectable.dart';
 
-/// API client for making HTTP requests.
+/// API client for GET requests with parsing and failure mapping.
 abstract class ApiClient {
   Future<Either<Failure, T>> get<T>({
     required String path,
@@ -17,7 +17,7 @@ abstract class ApiClient {
   });
 }
 
-/// Dio implementation of ApiClient.
+/// Dio-backed implementation of [ApiClient].
 @LazySingleton(as: ApiClient)
 class ApiClientImpl implements ApiClient {
   ApiClientImpl(this._networkInfo) {

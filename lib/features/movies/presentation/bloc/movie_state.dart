@@ -13,13 +13,13 @@ class MovieState with _$MovieState {
     required List<Movie> movies,
     @Default(1) int currentPage,
     @Default(true) bool hasMore,
-    @Default(false) bool isOffline, // ⬅️ Yeni parametre
+    @Default(false) bool isOffline,
   }) = MovieLoaded;
 
   const factory MovieState.loadingMore({
     required List<Movie> movies,
     required int currentPage,
-    @Default(false) bool isOffline, // ⬅️ Yeni parametre
+    @Default(false) bool isOffline,
   }) = MovieLoadingMore;
 
   const factory MovieState.premiumRequired({

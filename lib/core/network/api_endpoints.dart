@@ -1,6 +1,4 @@
-/// API endpoint paths.
-///
-/// All API routes are defined here to avoid hardcoded strings.
+/// Centralized API endpoints.
 abstract class ApiEndpoints {
   // Base version path
   static const String version = '/3';

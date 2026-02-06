@@ -1,7 +1,7 @@
 import 'package:dio/dio.dart';
 import 'package:fenix/config/env/env.dart';
 
-/// Adds API key to all requests automatically.
+/// Appends the API key to every outgoing request.
 class ApiKeyInterceptor extends Interceptor {
   @override
   void onRequest(RequestOptions options, RequestInterceptorHandler handler) {

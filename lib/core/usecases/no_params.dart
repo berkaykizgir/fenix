@@ -1,14 +1,4 @@
-/// Empty params class for use cases that don't need parameters.
-///
-/// Example:
-/// ```dart
-/// class GetMovies extends UseCase<List<Movie>, NoParams> {
-///   @override
-///   Future<Either<Failure, List<Movie>>> call(NoParams params) {
-///     // ...
-///   }
-/// }
-/// ```
+/// Empty params for use cases that require no input.
 class NoParams {
   const NoParams();
 }
