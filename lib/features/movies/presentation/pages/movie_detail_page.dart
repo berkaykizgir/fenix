@@ -3,6 +3,7 @@ import 'package:fenix/core/di/injection.dart';
 import 'package:fenix/features/favorites/presentation/bloc/favorites_bloc.dart';
 import 'package:fenix/features/favorites/presentation/bloc/favorites_event.dart';
 import 'package:fenix/features/movies/domain/entities/movie.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 
 @RoutePage()
@@ -39,7 +40,6 @@ class _MovieDetailPageState extends State<MovieDetailPage> {
 
   @override
   Widget build(BuildContext context) {
-    // Artık 'widget.movie' diyerek objeye erişebilirsiniz.
     final movie = widget.movie;
     final theme = Theme.of(context);
 
@@ -49,10 +49,6 @@ class _MovieDetailPageState extends State<MovieDetailPage> {
           SliverAppBar(
             pinned: true,
             expandedHeight: 280,
-            leading: IconButton(
-              icon: const Icon(Icons.arrow_back),
-              onPressed: () => context.router.pop(), // AutoRoute pop işlemi
-            ),
             actions: [
               IconButton(
                 icon: Icon(_isFavorite ? Icons.favorite : Icons.favorite_border),
@@ -93,7 +89,7 @@ class _MovieDetailPageState extends State<MovieDetailPage> {
                       const SizedBox(width: 6),
                       Text(movie.voteAverage.toStringAsFixed(1), style: theme.textTheme.titleMedium),
                       const Spacer(),
-                      Text('Çıkış: ${movie.releaseDate}', style: theme.textTheme.bodyMedium),
+                      Text('movie_detail.release'.tr(namedArgs: {'date': movie.releaseDate}), style: theme.textTheme.bodyMedium),
                     ],
                   ),
                   const SizedBox(height: 16),

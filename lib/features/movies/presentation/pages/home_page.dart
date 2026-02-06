@@ -126,10 +126,10 @@ class _HomePageContentState extends State<_HomePageContent> {
           PopupMenuButton<ThemeMode>(
             icon: const Icon(Icons.brightness_6),
             onSelected: _changeTheme,
-            itemBuilder: (_) => const [
-              PopupMenuItem(value: ThemeMode.light, child: Text('Light')),
-              PopupMenuItem(value: ThemeMode.dark, child: Text('Dark')),
-              PopupMenuItem(value: ThemeMode.system, child: Text('System')),
+            itemBuilder: (_) => [
+              PopupMenuItem(value: ThemeMode.light, child: Text('home.theme_light'.tr())),
+              PopupMenuItem(value: ThemeMode.dark, child: Text('home.theme_dark'.tr())),
+              PopupMenuItem(value: ThemeMode.system, child: Text('home.theme_system'.tr())),
             ],
           ),
         ],

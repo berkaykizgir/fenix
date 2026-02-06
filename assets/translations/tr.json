@@ -7,7 +7,10 @@
     "retry": "Tekrar Dene",
     "loading_more": "Daha fazla film yükleniyor...",
     "offline_mode": "📴 Çevrimdışı Mod: Önbelleğe alınmış filmler gösteriliyor (20)",
-    "offline_search": "🔍 Önbellekteki filmlerde aranıyor..."
+    "offline_search": "🔍 Önbellekteki filmlerde aranıyor...",
+    "theme_light": "Açık",
+    "theme_dark": "Koyu",
+    "theme_system": "Sistem"
   },
   "favorites": {
     "title": "Favoriler",
@@ -24,5 +27,9 @@
     "upgrade_now": "Premium'a Geç",
     "maybe_later": "Belki Sonra",
     "coming_soon": "Premium özellikler yakında!"
+  },
+  "movie_detail": {
+    "release": "Vizyon: {date}",
+    "not_found": "Film bilgisi bulunamadı"
   }
 }

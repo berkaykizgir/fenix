@@ -2,6 +2,7 @@ import 'package:dartz/dartz.dart';
 import 'package:fenix/core/error/exceptions.dart';
 import 'package:fenix/core/error/failures.dart';
 import 'package:fenix/core/network/network_info.dart';
+import 'package:fenix/features/favorites/data/datasources/favorites_local_data_source.dart';
 import 'package:fenix/features/movies/data/datasources/movie_local_data_source.dart';
 import 'package:fenix/features/movies/data/datasources/movie_remote_data_source.dart';
 import 'package:fenix/features/movies/data/models/movie_model.dart';
@@ -16,21 +17,29 @@ class MockMovieLocalDataSource extends Mock implements MovieLocalDataSource {}
 
 class MockNetworkInfo extends Mock implements NetworkInfo {}
 
+class MockFavoritesLocalDataSource extends Mock implements FavoritesLocalDataSource {}
+
 void main() {
   late MovieRepositoryImpl repository;
   late MockMovieRemoteDataSource mockRemoteDataSource;
   late MockMovieLocalDataSource mockLocalDataSource;
   late MockNetworkInfo mockNetworkInfo;
+  late MockFavoritesLocalDataSource mockFavoritesLocalDataSource;
 
   setUp(() {
     mockRemoteDataSource = MockMovieRemoteDataSource();
     mockLocalDataSource = MockMovieLocalDataSource();
     mockNetworkInfo = MockNetworkInfo();
+    mockFavoritesLocalDataSource = MockFavoritesLocalDataSource();
     repository = MovieRepositoryImpl(
       mockRemoteDataSource,
       mockLocalDataSource,
       mockNetworkInfo,
+      mockFavoritesLocalDataSource,
     );
+
+    // Default favorites stub
+    when(() => mockFavoritesLocalDataSource.getFavorites()).thenAnswer((_) async => []);
   });
 
   const tMovieModels = [

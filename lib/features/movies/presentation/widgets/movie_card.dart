@@ -78,8 +78,9 @@ class _MovieCardState extends State<MovieCard> {
                               ),
                             );
                           },
-                          errorBuilder: (context, error, stackTrace) => ColoredBox(
+                          errorBuilder: (context, error, stackTrace) => Container(
                             color: theme.colorScheme.surfaceContainerHighest,
+                            width: double.infinity,
                             child: Icon(
                               Icons.broken_image,
                               size: 48,

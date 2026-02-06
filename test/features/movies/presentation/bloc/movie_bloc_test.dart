@@ -1,6 +1,8 @@
 import 'package:dartz/dartz.dart';
 import 'package:fenix/core/network/network_info.dart';
+import 'package:fenix/features/favorites/data/datasources/favorites_local_data_source.dart';
 import 'package:fenix/features/movies/data/datasources/movie_local_data_source.dart';
+import 'package:fenix/features/movies/data/models/movie_model.dart';
 import 'package:fenix/features/movies/domain/entities/movie.dart';
 import 'package:fenix/features/movies/domain/usecases/get_top_rated_movies.dart';
 import 'package:fenix/features/movies/domain/usecases/search_movies.dart';
@@ -20,12 +22,15 @@ class MockNetworkInfo extends Mock implements NetworkInfo {}
 
 class MockMovieLocalDataSource extends Mock implements MovieLocalDataSource {}
 
+class MockFavoritesLocalDataSource extends Mock implements FavoritesLocalDataSource {}
+
 void main() {
   late MovieBloc bloc;
   late MockGetTopRatedMovies mockGetTopRatedMovies;
   late MockSearchMovies mockSearchMovies;
   late MockNetworkInfo mockNetworkInfo;
   late MockMovieLocalDataSource mockLocalDataSource;
+  late MockFavoritesLocalDataSource mockFavoritesLocalDataSource;
   late StreamController<bool> networkStreamController;
 
   // Test data
@@ -55,6 +60,7 @@ void main() {
     mockSearchMovies = MockSearchMovies();
     mockNetworkInfo = MockNetworkInfo();
     mockLocalDataSource = MockMovieLocalDataSource();
+    mockFavoritesLocalDataSource = MockFavoritesLocalDataSource();
     networkStreamController = StreamController<bool>.broadcast();
 
     // Setup network stream mock
@@ -64,6 +70,10 @@ void main() {
 
     // Default: online
     when(() => mockNetworkInfo.isConnected).thenAnswer((_) async => true);
+
+    // Default favorites
+    when(() => mockFavoritesLocalDataSource.getFavorites()).thenAnswer((_) async => <MovieModel>[]);
+    when(() => mockFavoritesLocalDataSource.watchFavorites()).thenAnswer((_) => Stream.value(<MovieModel>[]));
 
     // Register fallback values for Mocktail
     registerFallbackValue(const GetTopRatedMoviesParams());
@@ -89,6 +99,7 @@ void main() {
               mockSearchMovies,
               mockNetworkInfo,
               mockLocalDataSource,
+              mockFavoritesLocalDataSource,
             )
             // Load initial data (offline, cache)
             ..add(const MovieEvent.getTopRatedMovies());
@@ -117,6 +128,7 @@ void main() {
               mockSearchMovies,
               mockNetworkInfo,
               mockLocalDataSource,
+              mockFavoritesLocalDataSource,
             )
             // Act
             ..add(const MovieEvent.getTopRatedMovies());
@@ -155,6 +167,7 @@ void main() {
               mockSearchMovies,
               mockNetworkInfo,
               mockLocalDataSource,
+              mockFavoritesLocalDataSource,
             )
             // Act
             ..add(const MovieEvent.getTopRatedMovies());
@@ -182,6 +195,7 @@ void main() {
               mockSearchMovies,
               mockNetworkInfo,
               mockLocalDataSource,
+              mockFavoritesLocalDataSource,
             )
             // Load initial data
             ..add(const MovieEvent.getTopRatedMovies());
@@ -244,6 +258,7 @@ void main() {
               mockSearchMovies,
               mockNetworkInfo,
               mockLocalDataSource,
+              mockFavoritesLocalDataSource,
             )
             // Load initial data
             ..add(const MovieEvent.getTopRatedMovies());

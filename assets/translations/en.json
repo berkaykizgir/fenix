@@ -7,7 +7,10 @@
     "retry": "Retry",
     "loading_more": "Loading more movies...",
     "offline_mode": "📴 Offline Mode: Showing cached movies (20)",
-    "offline_search": "🔍 Searching in cached movies..."
+    "offline_search": "🔍 Searching in cached movies...",
+    "theme_light": "Light",
+    "theme_dark": "Dark",
+    "theme_system": "System"
   },
   "favorites": {
     "title": "Favorites",
@@ -24,5 +27,9 @@
     "upgrade_now": "Upgrade to Premium",
     "maybe_later": "Maybe Later",
     "coming_soon": "Premium features coming soon!"
+  },
+  "movie_detail": {
+    "release": "Release: {date}",
+    "not_found": "Movie info not found"
   }
 }
