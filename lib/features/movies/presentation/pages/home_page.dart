@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:auto_route/auto_route.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:fenix/config/localization/language_manager.dart';
+import 'package:fenix/config/routes/app_router.dart';
 import 'package:fenix/config/theme/theme_manager.dart';
 import 'package:fenix/core/di/injection.dart';
 import 'package:fenix/features/movies/domain/entities/movie.dart';
@@ -21,6 +22,7 @@ class HomePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    debugPrint(getIt<MovieBloc>().hashCode.toString());
     return BlocProvider(
       create: (_) => getIt<MovieBloc>()..add(const MovieEvent.getTopRatedMovies()),
       child: const _HomePageContent(),
@@ -107,6 +109,13 @@ class _HomePageContentState extends State<_HomePageContent> {
       appBar: AppBar(
         title: Text('home.title'.tr()),
         actions: [
+          // Favorites button
+          IconButton(
+            icon: const Icon(Icons.favorite),
+            onPressed: () async {
+              await context.router.push(const FavoritesRoute());
+            },
+          ),
           // Language selector
           PopupMenuButton<Locale>(
             icon: const Icon(Icons.language),
@@ -186,6 +195,7 @@ class _HomePageContentState extends State<_HomePageContent> {
             // Movie list
             Expanded(
               child: BlocBuilder<MovieBloc, MovieState>(
+                key: UniqueKey(),
                 builder: (context, state) {
                   return state.when(
                     initial: () => Center(child: Text('home.search_prompt'.tr())),
@@ -225,6 +235,7 @@ class _HomePageContentState extends State<_HomePageContent> {
     return GridView.builder(
       controller: _scrollController,
       padding: const EdgeInsets.all(16),
+      addAutomaticKeepAlives: false,
       gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
         crossAxisCount: 2,
         childAspectRatio: 0.7,
@@ -241,7 +252,7 @@ class _HomePageContentState extends State<_HomePageContent> {
             ),
           );
         }
-        return MovieCard(movie: movies[index]);
+        return MovieCard(key: ValueKey('${movies[index].id}_${movies[index].isFavorite}'), movie: movies[index]);
       },
     );
   }

@@ -9,4 +9,8 @@ sealed class MovieEvent with _$MovieEvent {
   const factory MovieEvent.searchMovies(String query) = SearchMoviesEvent;
   const factory MovieEvent.loadMoreSearchResults(String query) = LoadMoreSearchResultsEvent;
   const factory MovieEvent.networkStatusChanged({required bool isOnline}) = NetworkStatusChangedEvent;
+  const factory MovieEvent.updateMovieFavoriteStatus({
+    required int movieId,
+    required bool isFavorite,
+  }) = UpdateMovieFavoriteStatusEvent;
 }

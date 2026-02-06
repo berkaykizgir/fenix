@@ -1,5 +1,7 @@
 import 'dart:async';
+import 'package:fenix/features/favorites/data/datasources/favorites_local_data_source.dart';
 import 'package:fenix/features/movies/data/models/movie_model.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:injectable/injectable.dart';
 
@@ -11,19 +13,21 @@ import '../../domain/usecases/search_movies.dart';
 import '../bloc/movie_event.dart';
 import '../bloc/movie_state.dart';
 
-@injectable
+@singleton
 class MovieBloc extends Bloc<MovieEvent, MovieState> {
   MovieBloc(
     this._getTopRatedMovies,
     this._searchMovies,
     this._networkInfo,
     this._localDataSource,
+    this._favoritesDataSource,
   ) : super(const MovieState.initial()) {
     on<GetTopRatedMoviesEvent>(_onGetTopRatedMovies);
     on<LoadMoreMoviesEvent>(_onLoadMoreMovies);
     on<SearchMoviesEvent>(_onSearchMovies);
     on<LoadMoreSearchResultsEvent>(_onLoadMoreSearchResults);
     on<NetworkStatusChangedEvent>(_onConnectionChanged);
+    on<UpdateMovieFavoriteStatusEvent>(_onUpdateMovieFavoriteStatus);
 
     _networkSubscription = _networkInfo.connectionStream.listen(
       (isConnected) => add(MovieEvent.networkStatusChanged(isOnline: isConnected)),
@@ -34,23 +38,14 @@ class MovieBloc extends Bloc<MovieEvent, MovieState> {
   final SearchMovies _searchMovies;
   final NetworkInfo _networkInfo;
   final MovieLocalDataSource _localDataSource;
+  final FavoritesLocalDataSource _favoritesDataSource;
 
   /// Stores the latest search query to restore state after connectivity changes.
   String? _currentSearchQuery;
 
   late final StreamSubscription<bool> _networkSubscription;
-
-  /// Prevents duplicate API calls caused by the first network emission on app start.
   bool _isFirstConnectionEvent = true;
 
-  // ---------------------------------------------------------------------------
-  // Network state handling
-  // ---------------------------------------------------------------------------
-
-  /// Handles connectivity changes.
-  ///
-  /// - When going offline → loads cached data (and filters if search is active)
-  /// - When back online → restores previous context (search or top rated)
   Future<void> _onConnectionChanged(
     NetworkStatusChangedEvent event,
     Emitter<MovieState> emit,
@@ -113,19 +108,27 @@ class MovieBloc extends Bloc<MovieEvent, MovieState> {
 
     final result = await _getTopRatedMovies(const GetTopRatedMoviesParams());
     final isOnline = await _networkInfo.isConnected;
+    final favoriteMovies = await _favoritesDataSource.getFavorites();
 
     result.fold(
       (failure) => emit(MovieState.error(failure.message)),
-      (movies) => emit(
-        MovieState.loaded(
-          movies: movies,
-          hasMore: isOnline && movies.length >= 20,
-          isOffline: !isOnline,
-        ),
-      ),
+      (movies) {
+        // ⬅️ EKLE: Initial load'da da mark et
+        final favoriteIds = favoriteMovies.map((m) => m.id).toSet();
+        final markedMovies = movies.map((movie) {
+          return movie.copyWith(isFavorite: favoriteIds.contains(movie.id));
+        }).toList();
+        debugPrint('⭐ Initial load: Marked ${markedMovies.length} movies with favorites');
+        emit(
+          MovieState.loaded(
+            movies: markedMovies,
+            hasMore: isOnline && markedMovies.length >= 20,
+            isOffline: !isOnline,
+          ),
+        );
+      },
     );
   }
-
   // ---------------------------------------------------------------------------
   // Search
   // ---------------------------------------------------------------------------
@@ -145,10 +148,22 @@ class MovieBloc extends Bloc<MovieEvent, MovieState> {
 
     if (isOnline) {
       final result = await _searchMovies(SearchMoviesParams(query: event.query));
-
+      final favoriteMovies = await _favoritesDataSource.getFavorites();
       result.fold(
         (failure) => emit(MovieState.error(failure.message)),
-        (movies) => emit(MovieState.loaded(movies: movies, hasMore: movies.length >= 20)),
+        (movies) async {
+          // ⬅️ EKLE: Favorite flag'lerini mark et
+
+          final favoriteIds = favoriteMovies.map((m) => m.id).toSet();
+
+          final markedMovies = movies.map((movie) {
+            return movie.copyWith(isFavorite: favoriteIds.contains(movie.id));
+          }).toList();
+
+          debugPrint('🔍 Search: Marked ${markedMovies.length} movies with favorites');
+
+          emit(MovieState.loaded(movies: markedMovies, hasMore: markedMovies.length >= 20));
+        },
       );
       return;
     }
@@ -162,13 +177,19 @@ class MovieBloc extends Bloc<MovieEvent, MovieState> {
         return movie.title.toLowerCase().contains(query) || movie.overview.toLowerCase().contains(query);
       }).toList();
 
-      emit(MovieState.loaded(movies: filtered, hasMore: false, isOffline: true));
+      // ⬅️ EKLE: Offline search'te de mark et
+      final favoriteMovies = await _favoritesDataSource.getFavorites();
+      final favoriteIds = favoriteMovies.map((m) => m.id).toSet();
+
+      final markedFiltered = filtered.map((movie) {
+        return movie.copyWith(isFavorite: favoriteIds.contains(movie.id));
+      }).toList();
+
+      emit(MovieState.loaded(movies: markedFiltered, hasMore: false, isOffline: true));
     } on CacheException catch (e) {
       emit(MovieState.error(e.message));
     }
-  }
-
-  // ---------------------------------------------------------------------------
+  } // ---------------------------------------------------------------------------
   // Pagination – Top rated
   // ---------------------------------------------------------------------------
 
@@ -196,7 +217,7 @@ class MovieBloc extends Bloc<MovieEvent, MovieState> {
     emit(MovieState.loadingMore(movies: currentState.movies, currentPage: currentState.currentPage));
 
     final result = await _getTopRatedMovies(GetTopRatedMoviesParams(page: nextPage));
-
+    final favoriteMovies = await _favoritesDataSource.getFavorites();
     result.fold(
       (_) => emit(
         MovieState.loaded(
@@ -205,16 +226,25 @@ class MovieBloc extends Bloc<MovieEvent, MovieState> {
           hasMore: false,
         ),
       ),
-      (newMovies) => emit(
-        MovieState.loaded(
-          movies: [...currentState.movies, ...newMovies],
-          currentPage: nextPage,
-          hasMore: newMovies.length >= 20,
-        ),
-      ),
+      (newMovies) {
+        // ⬅️ EKLE: Pagination'da da mark et
+
+        final favoriteIds = favoriteMovies.map((m) => m.id).toSet();
+
+        final markedNewMovies = newMovies.map((movie) {
+          return movie.copyWith(isFavorite: favoriteIds.contains(movie.id));
+        }).toList();
+
+        emit(
+          MovieState.loaded(
+            movies: [...currentState.movies, ...markedNewMovies],
+            currentPage: nextPage,
+            hasMore: markedNewMovies.length >= 20,
+          ),
+        );
+      },
     );
   }
-
   // ---------------------------------------------------------------------------
   // Pagination – Search
   // ---------------------------------------------------------------------------
@@ -240,7 +270,7 @@ class MovieBloc extends Bloc<MovieEvent, MovieState> {
     emit(MovieState.loadingMore(movies: currentState.movies, currentPage: currentState.currentPage));
 
     final result = await _searchMovies(SearchMoviesParams(query: event.query, page: nextPage));
-
+    final favoriteMovies = await _favoritesDataSource.getFavorites();
     result.fold(
       (_) => emit(
         MovieState.loaded(
@@ -249,16 +279,22 @@ class MovieBloc extends Bloc<MovieEvent, MovieState> {
           hasMore: false,
         ),
       ),
-      (newMovies) => emit(
-        MovieState.loaded(
-          movies: [...currentState.movies, ...newMovies],
-          currentPage: nextPage,
-          hasMore: newMovies.length >= 20,
-        ),
-      ),
+      (newMovies) {
+        final favoriteIds = favoriteMovies.map((m) => m.id).toSet();
+        final markedNewMovies = newMovies.map((movie) {
+          return movie.copyWith(isFavorite: favoriteIds.contains(movie.id));
+        }).toList();
+
+        emit(
+          MovieState.loaded(
+            movies: [...currentState.movies, ...markedNewMovies],
+            currentPage: nextPage,
+            hasMore: markedNewMovies.length >= 20,
+          ),
+        );
+      },
     );
   }
-
   // ---------------------------------------------------------------------------
   // Dispose
   // ---------------------------------------------------------------------------
@@ -267,5 +303,27 @@ class MovieBloc extends Bloc<MovieEvent, MovieState> {
   Future<void> close() async {
     await _networkSubscription.cancel();
     return super.close();
+  }
+
+  Future<void> _onUpdateMovieFavoriteStatus(
+    UpdateMovieFavoriteStatusEvent event,
+    Emitter<MovieState> emit,
+  ) async {
+    final currentState = state;
+    debugPrint('🔄 Updating favorite status for movie ${event.movieId} to ${event.isFavorite}');
+    // Only update if in loaded state
+    if (currentState is! MovieLoaded) return;
+
+    // Update the specific movie's favorite status
+    final updatedMovies = currentState.movies.map((movie) {
+      if (movie.id == event.movieId) {
+        return movie.copyWith(isFavorite: event.isFavorite);
+      }
+      return movie;
+    }).toList();
+
+    debugPrint('🔄 Updated movie ${event.movieId} favorite status: ${event.isFavorite}');
+
+    emit(MovieState.loaded(movies: updatedMovies, hasMore: currentState.hasMore, currentPage: currentState.currentPage, isOffline: currentState.isOffline));
   }
 }

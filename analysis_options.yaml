@@ -11,3 +11,4 @@ linter:
     prefer_const_literals_to_create_immutables: true
     sort_constructors_first: false
     one_member_abstracts: false
+    avoid_catches_without_on_clauses: false

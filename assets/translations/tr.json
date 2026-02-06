@@ -9,6 +9,12 @@
     "offline_mode": "📴 Çevrimdışı Mod: Önbelleğe alınmış filmler gösteriliyor (20)",
     "offline_search": "🔍 Önbellekteki filmlerde aranıyor..."
   },
+  "favorites": {
+    "title": "Favoriler",
+    "empty": "Henüz favori yok",
+    "empty_hint": "Herhangi bir filmin kalp ikonuna tıklayarak favorilerinize ekleyin",
+    "retry": "Tekrar Dene"
+  },
   "premium": {
     "title": "Sınırsız Film İzle",
     "description": "Premium'a geçerek sınırsız film keşfet ve özel özelliklerin keyfini çıkar!",

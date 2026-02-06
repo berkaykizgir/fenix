@@ -9,6 +9,12 @@
     "offline_mode": "📴 Offline Mode: Showing cached movies (20)",
     "offline_search": "🔍 Searching in cached movies..."
   },
+  "favorites": {
+    "title": "Favorites",
+    "empty": "No favorites yet",
+    "empty_hint": "Tap the heart icon on any movie to add it to your favorites",
+    "retry": "Retry"
+  },
   "premium": {
     "title": "Unlock Unlimited Movies",
     "description": "Upgrade to Premium to browse unlimited movies and enjoy exclusive features!",

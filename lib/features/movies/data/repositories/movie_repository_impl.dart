@@ -2,6 +2,7 @@ import 'package:dartz/dartz.dart';
 import 'package:fenix/core/error/exceptions.dart';
 import 'package:fenix/core/error/failures.dart';
 import 'package:fenix/core/network/network_info.dart';
+import 'package:fenix/features/favorites/data/datasources/favorites_local_data_source.dart';
 import 'package:fenix/features/movies/data/datasources/movie_local_data_source.dart';
 import 'package:fenix/features/movies/data/datasources/movie_remote_data_source.dart';
 import 'package:fenix/features/movies/domain/entities/movie.dart';
@@ -17,11 +18,29 @@ class MovieRepositoryImpl implements MovieRepository {
     this._remoteDataSource,
     this._localDataSource,
     this._networkInfo,
+    this._favoritesDataSource,
   );
 
   final MovieRemoteDataSource _remoteDataSource;
   final MovieLocalDataSource _localDataSource;
   final NetworkInfo _networkInfo;
+  final FavoritesLocalDataSource _favoritesDataSource;
+
+  Future<List<Movie>> _markFavorites(List<MovieModel> models) async {
+    try {
+      final favoriteMovies = await _favoritesDataSource.getFavorites();
+      final favoriteIds = favoriteMovies.map((m) => m.id).toSet();
+
+      return models.map((model) {
+        final entity = model.toEntity();
+        return entity.copyWith(isFavorite: favoriteIds.contains(entity.id));
+      }).toList();
+    } catch (e) {
+      debugPrint('⚠️ Failed to mark favorites: $e');
+      // Return without favorite flags on error
+      return models.map((m) => m.toEntity()).toList();
+    }
+  }
 
   @override
   Future<Either<Failure, List<Movie>>> getTopRatedMovies({int page = 1}) async {
@@ -36,7 +55,7 @@ class MovieRepositoryImpl implements MovieRepository {
           debugPrint('💾 Cached ${movieModels.length} movies from page $page');
         }
 
-        final movies = movieModels.map((model) => model.toEntity()).toList();
+        final movies = await _markFavorites(movieModels);
         return Right(movies);
       } on ServerException catch (e) {
         debugPrint('❌ Server error: ${e.message}');
@@ -53,7 +72,8 @@ class MovieRepositoryImpl implements MovieRepository {
       try {
         final cachedMovies = await _localDataSource.getCachedMovies();
         debugPrint('📦 Cache contains ${cachedMovies.length} movies');
-        final movies = cachedMovies.map((model) => model.toEntity()).toList();
+        // Mark favorites
+        final movies = await _markFavorites(cachedMovies);
         debugPrint('✅ Successfully loaded ${movies.length} movies from cache');
         return Right(movies);
       } on CacheException catch (e) {
@@ -79,7 +99,7 @@ class MovieRepositoryImpl implements MovieRepository {
     debugPrint('🔍 Searching movies with query: "$query" (page: $page)');
     try {
       final movieModels = await _remoteDataSource.searchMovies(query, page: page);
-      final movies = movieModels.map((model) => model.toEntity()).toList();
+      final movies = await _markFavorites(movieModels);
       debugPrint('✅ Found ${movies.length} movies for "$query"');
       return Right(movies);
     } on ServerException catch (e) {
